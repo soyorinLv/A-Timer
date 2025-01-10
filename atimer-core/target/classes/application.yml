@@ -1,0 +1,71 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: atimer-core
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        username: nacos
+        password: naocs
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/a_timer_db?serverTimezone=GMT%2B8&characterEncoding=utf8&&allowMultiQueries=true&useSSL=false
+    username: root
+    password: lklFuFu
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      min-idle: 5  # 连接池最小空闲
+      max-active: 100 # 连接池最大连接数
+      max-wait: 1000 # 连接池最大阻塞等待时间（毫秒）
+      min-evictable-idle-time-millis: 300000 # 连接池中连接，达到最小空闲，没有连接可用时，调用borrowObject方法，等待超时时间
+      time-between-eviction-runs-millis: 60000 # 连接池维护线程运行时间
+  redis:
+    host: localhost
+    port: 6379
+#    password:
+    database: 0
+    jedis:
+      pool:
+        max-active: 8
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: false
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+#xTimer相关配置
+scheduler:
+  bucketsNum: 5
+  tryLockSeconds: 70
+  tryLockGapMilliSeconds: 100
+  successExpireSeconds: 130
+  pool:
+    corePoolSize: 100
+    maxPoolSize: 100
+    queueCapacity: 99999
+    namePrefix: scheduler-
+
+
+trigger:
+  zrangeGapSeconds: 1
+  workersNum: 10000
+  pool:
+    corePoolSize: 100
+    maxPoolSize: 100
+    queueCapacity: 99999
+    namePrefix: trigger-
+
+migrator:
+  workersNum: 1000
+  migrateStepMinutes: 60
+  migrateTryLockMinutes: 1
+  migrateSuccessExpireMinutes: 1
+  timerDetailCacheMinutes: 2
+logging:
+  config: classpath:logback.xml
+  level:
+    com.soyo.xTimer: warn
+    org.springframework: warn
